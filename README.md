@@ -110,12 +110,10 @@ int main(void)
 ```
 - Lalu ketik di terminal 
 ```
-gcc -o modul2_1_benar modul2_1_benar.c
+gcc -pthread -o soal1 soal1.c
 ```
 
-- Lalu jalankan ```./modul2_1_benar```
-
-- Maka semua file .png yang ada di /home/test akan di-rename menjadi nama yang dikehendaki
+- Lalu jalankan ```./soal1```
 
 **Kendala Yang Dialami**
 
@@ -378,12 +376,11 @@ int main(void)
 ```
 - Lalu ketik di terminal 
 ```
-gcc -o modul2_3 modul2_3.c
+gcc -pthread -o soal3 soal3.c
 ```
 
-- Lalu jalankan ```./modul2_3```
+- Lalu jalankan ```./soal3```
 
-- Maka file campur2.zip akan ter-unzip dan daftar file yang memiliki ekstensi .txt akan masuk ke file daftar.txt
 
 **Kendala Yang Dialami**
 
@@ -550,12 +547,10 @@ int main(void)
 ```
 - Lalu ketik di terminal 
 ```
-gcc -o modul2_4 modul2_4.c
+gcc -pthread -o soal4 soal4.c
 ```
 
-- Lalu jalankan ```./modul2_4```
-
-- Maka program akan berjalan seperti semestinya 
+- Lalu jalankan ```./soal4```
 
 **Kendala Yang Dialami**
 
