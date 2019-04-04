@@ -46,112 +46,66 @@ Contoh:
 
 - Buatlah program C seperti ini 
 ```
-#include <sys/wait.h>
-#include <sys/types.h>
-#include <sys/stat.h>
-#include <unistd.h>
-#include <stdio.h>
-#include <string.h>
-#include <stdlib.h>
-#include <syslog.h>
-#include <dirent.h>
-#include <fcntl.h>
-#include <errno.h>
+#include<stdio.h>
+#include<string.h>
+#include<pthread.h>
+#include<stdlib.h>
+#include<unistd.h>
 
-int main() {
-  pid_t pid, sid;
+int T;
+int number[100],tampungan[100];
+int factorial=1,b=0,c,d=0;
 
-  pid = fork();
-
-  if (pid < 0) {
-    exit(EXIT_FAILURE);
-  }
-
-  if (pid > 0) {
-    exit(EXIT_SUCCESS);
-  }
-
-  umask(0);
-
-  sid = setsid();
-
-  if (sid < 0) {
-    exit(EXIT_FAILURE);
-  }
-
-  if ((chdir("/home/test")) < 0) {
-    exit(EXIT_FAILURE);
-  }
-
-  close(STDIN_FILENO);
-  close(STDOUT_FILENO);
-  close(STDERR_FILENO);
-
-  while(1) {
-        pid_t child_id, child_id_2;
-        int status;
-
-        child_id = fork();
-
-        if (child_id == 0) {
-        // this is child
-
-        char *argv[4] = {"mkdir", "-p", "modul2/gambar", NULL};
-        execv("/bin/mkdir", argv);
-        } else {
-        // this is second child
-        child_id_2 = fork();
-        if (child_id_2 == 0) {
-
-        char *argv[4] = {"mkdir", "-p", "modul2", NULL};
-        execv("/bin/mkdir", argv);
-
-        } else {
-        while ((wait(&status)) > 0);
-        char filename[10000];
-        char filename2[10000];
-        char filename3[10000];
-        char awal1[10000];
-        char akhir1[10000];
-        char *pointer;
-        char *pointer1;
-        char *pointer2;
-        char *pointer3;
-
-        DIR *direktori;
-        struct dirent *dir;
-        direktori = opendir("/home/test/");
-        if (direktori)
+void* fungsi(void *arg)
+{
+        int i,j,sementara;
+        for(c=1;c<=number[b];c++)
         {
-                while ((dir = readdir(direktori)) != NULL)
+                factorial*=c;
+        }
+        tampungan[d]=factorial;
+        factorial=1;
+        b+=1;
+        d+=1;
+        if(d==T)
+        {
+                for (i=0;i<T;i++)
                 {
-                        strcpy(filename,dir->d_name);
-                        pointer3 = strrchr(filename, '.');
-                        strcpy(filename3,filename);
-                        if (pointer3 && (strcmp(pointer3, ".png") == 0))
+                        for (j=i+1;j<T;j++)
                         {
-                                *pointer3 = '\0';
-                                strcpy(filename2,filename);
-                                pointer = filename2;
-                                char tambahan[10]="_grey.png";
-                                strcat (pointer,tambahan);
-                                char awal[]="/home/test/";
-                                char akhir[]="/home/test/modul2/gambar/";
-                                strcpy(awal1,awal);
-                                strcpy(akhir1,akhir);
-                                pointer1 = awal1;
-                                pointer2 = akhir1;
-                                strcat (pointer1,filename3);
-                                strcat (pointer2,pointer);
-                                rename (pointer1,pointer2);
+                                if(tampungan[i] > tampungan[j])
+                                {
+                                        sementara = tampungan[i];
+                                        tampungan[i] = tampungan[j];
+                                        tampungan[j] = sementara;
+                                }
                         }
                 }
-                closedir(direktori);
+                for (i=0;i<T;i++)
+                {
+                        printf("%d\n", tampungan[i]);
+                }
         }
-      }
-    }
-  }
-  exit(EXIT_SUCCESS);
+        return NULL;
+}
+
+int main(void)
+{
+        int i;
+        printf("Masukkan jumlah bilangan : ");
+        scanf("%d", &T);
+        printf("Masukkan bilangan : ");
+        for (i=0;i<T;i++)
+        {
+                scanf("%d", &number[i]);
+        }
+        for (i=0;i<T;i++)
+        {
+                pthread_t tid[i];
+                pthread_create(&(tid[i]),NULL,fungsi,NULL);
+                pthread_join(tid[i],NULL);
+        }
+        return 0;
 }
 ```
 - Lalu ketik di terminal 
@@ -337,75 +291,89 @@ Ex: Agmal WakeUp_Status = 75
 
 - Buat program C seperti ini
 ```
-#include <sys/wait.h>
-#include <sys/types.h>
-#include <unistd.h>
-#include <stdio.h>
-#include <string.h>
+#include<stdio.h>
+#include<string.h>
+#include<pthread.h>
+#include<stdlib.h>
+#include<unistd.h>
+#include<sys/types.h>
+#include<sys/wait.h>
 
-int main() {
-  int p[2];
-  int q[2];
+int WakeUp_Status = 0;
+int Spirit_Status = 100;
+int status=0;
+int status2=0;
+int input;
 
-  pid_t child_id;
-  pid_t child_id_2;
-  pid_t child_id_3;
-  pid_t child_id_4;
-  int status;
-  int r;
-  char tampungan[10000]={0};
-
-  child_id = fork();
-
-  if (child_id == 0) {
-    // this is first child
-        char *argv[3] = {"touch", "daftar.txt", NULL};
-        execv("/usr/bin/touch", argv);
-
-  } else {
-    // this is second child
-    child_id_2 = fork();
-    if (child_id_2 == 0) {
-        char *argv[3] = {"unzip", "campur2.zip", NULL};
-        execv("/usr/bin/unzip", argv);
-
-    } else {
-      while ((wait(&status)) > 0);
-
-        char *ls[] = {"ls", "campur2", NULL};
-        char *grep[] = {"grep", ".*.txt$", NULL};
-
-        pipe(p);
-        pipe(q);
-        child_id_3=fork();
-        if (child_id_3 == 0) {
-                //this is third child
-                dup2(p[1],1);
-                close(p[0]);
-                close(p[1]);
-                execvp("ls", ls);
-        } else {
-                child_id_4 = fork();
-                if (child_id_4 == 0) {
-                        //this is fourth child
-                        dup2(p[0],0);
-                        dup2(q[1],1);
-                        close(p[1]);
-                        close(p[0]);
-                        close(q[1]);
-                        close(q[0]);
-                        execvp("grep", grep);
-                } else {
-                        close(p[0]);
-                        close(p[1]);
-                        close(q[1]);
-                        r = read(q[0],tampungan,sizeof(tampungan));
-                        FILE *out_file = fopen("daftar.txt","w+");
-                        fprintf(out_file,"%.*s\n", r, tampungan);
+void* fungsi(void *arg)
+{
+        if(input==1)
+        {
+                printf("Agmal WakeUp_Status = %d\n", WakeUp_Status);
+                printf("Iraj Spirit_Status = %d\n", Spirit_Status);
+        }
+        else if (input==2)
+        {
+                if(status2==3)
+                {
+                        printf("Agmal Ayo Bangun disabled 10 s\n");
+                        sleep(10);
+                        status2=0;
+                }
+                else if(status2!=3)
+                {
+                        WakeUp_Status+=15;
+                        status++;
                 }
         }
-    }
-  }
+        else if (input==3)
+        {
+                if(status==3)
+                {
+                        printf("Fitur Iraj Ayo Tidur disabled 10 s\n");
+                        sleep(10);
+                        status=0;
+                }
+                else if(status!=3)
+                {
+                        Spirit_Status-=20;
+                        status2++;
+                }
+        }
+
+        return NULL;
+}
+
+int main(void)
+{
+        int i=0;
+        printf("Terdapat 3 fitur utama: \n");
+        printf("1. Tekan 1 jika ingin menampilkan status\n");
+        printf("2. Tekan 2 jika ingin menambah WakeUp_Status\n");
+        printf("3. Tekan 3 jika ingin mengurangi Spirit_Status\n");
+        while(1)
+        {
+                printf("Masukkan perintah : ");
+                scanf("%d", &input);
+                pthread_t tid[i];
+                pthread_create(&(tid[i]),NULL,fungsi,NULL);
+                pthread_join(tid[i],NULL);
+                i++;
+
+                if (WakeUp_Status >= 100)
+                {
+                        printf("Agmal Terbangun, mereka bangun pagi dan berolahraga\n");
+                        break;
+                }
+                if (Spirit_Status <= 0)
+                {
+                        printf("Iraj ikut tidur, dan bangun kesiangan bersama Agmal\n");
+                        break;
+                }
+        }
+
+        exit(0);
+        return 0;
 }
 ```
 - Lalu ketik di terminal 
@@ -443,71 +411,141 @@ Dengan Syarat :
 
 - Buat program C seperti ini 
 ```
-#include <sys/types.h>
-#include <sys/stat.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <fcntl.h>
-#include <errno.h>
-#include <unistd.h>
-#include <syslog.h>
-#include <string.h>
-#include <time.h>
+#include<stdio.h>
+#include<string.h>
+#include<pthread.h>
+#include<stdlib.h>
+#include<unistd.h>
+#include<sys/types.h>
+#include<sys/wait.h>
 
-int main() {
-  pid_t pid, sid;
+pthread_t tid[2], tid2[2], tid3[2], tid4[2];
+int status;
+void *thread1(void *arg)
+{
+        status = 0;
+        char buffer3[100], buffer4[100];
+        pthread_t id = pthread_self();
+        if(pthread_equal(id,tid[0]))
+        {
+                snprintf(buffer3, sizeof(buffer3), "ps -aux | head -10 > /home/test/Documents/FolderProses1/SimpanProses1.txt");
+                system(buffer3);
+        }
+        else if(pthread_equal(id,tid[1]))
+        {
+                snprintf(buffer4, sizeof(buffer4), "ps -aux | head -10 > /home/test/Documents/FolderProses2/SimpanProses2.txt");
+                system(buffer4);
 
-  pid = fork();
+        }
+        status = 1;
+        return NULL;
+}
 
-  if (pid < 0) {
-    exit(EXIT_FAILURE);
-  }
 
-  if (pid > 0) {
-    exit(EXIT_SUCCESS);
-  }
+void *thread2(void *arg)
+{
+        while(status!=1)
+        {
 
-  umask(0);
+        }
+        char buffer[100], buffer2[100];
+        pthread_t id2 = pthread_self();
+        if(pthread_equal(id2,tid2[0]))
+        {
+                snprintf(buffer, sizeof(buffer), "zip KompresProses1.zip /home/test/Documents/FolderProses1/SimpanProses1.txt");
+                system(buffer);
+        }
+        else if(pthread_equal(id2,tid2[1]))
+        {
+                snprintf(buffer2, sizeof(buffer2), "zip KompresProses2.zip /home/test/Documents/FolderProses2/SimpanProses2.txt");
+                system(buffer2);
+        }
+        status=2;
+        return NULL;
+}
 
-  sid = setsid();
+void *thread3(void *arg)
+{
+        while(status!=2)
+        {
 
-  if (sid < 0) {
-    exit(EXIT_FAILURE);
-  }
+        }
+        char buffer[100], buffer2[100];
+        char buf[100], buf2[100];
+        pthread_t id3 = pthread_self();
+        if(pthread_equal(id3,tid3[0]))
+        {
+                snprintf(buf, sizeof(buf), "rm /home/test/Documents/FolderProses1/SimpanProses1.txt");
+                system(buf);
+        }
+        else if(pthread_equal(id3,tid3[1]))
+        {
+                snprintf(buf2, sizeof(buf2), "rm /home/test/Documents/FolderProses2/SimpanProses2.txt");
+                system(buf2);
+        }
+        status=2;
+        return NULL;
+}
 
-  if ((chdir("/")) < 0) {
-    exit(EXIT_FAILURE);
-  }
+void *thread4(void *arg)
+{
+        while(status!=3)
+        {
 
-  close(STDIN_FILENO);
-  close(STDOUT_FILENO);
-  close(STDERR_FILENO);
-  int angka = 1;
-  while(1) {
-    struct stat baca;
+        }
+        sleep(15);
+        char buff[100], buff2[100];
+        pthread_t id4 = pthread_self();
+        if(pthread_equal(id4,tid4[0]))
+        {
+                snprintf(buff, sizeof(buff), "unzip KompresProses1.zip");
+                system(buff);
+        }
+        else if(pthread_equal(id4,tid4[1]))
+        {
+                snprintf(buff2, sizeof(buff2), "unzip KompresProses2.zip");
+                system(buff2);
+        }
+        return NULL;
+}
+int main(void)
+{
+        int i=0, j=0, k=0, l=0;
+        while(i<2) // loop sejumlah thread
+        {
+                pthread_create(&(tid[i]),NULL,&thread1,NULL); //membuat thread
+                i++;
+        }
+        while(j<2) // loop sejumlah thread
+        {
+                pthread_create(&(tid2[j]),NULL,&thread2,NULL); //membuat thread
+                j++;
+        }
+        while(k<2) // loop sejumlah thread
+        {
+                pthread_create(&(tid3[k]),NULL,&thread3,NULL); //membuat thread
+                k++;
+        }
+        while(l<2) // loop sejumlah thread
+        {
+                pthread_create(&(tid4[l]),NULL,&thread4,NULL); //membuat thread
+                l++;
+        }
 
-    time_t raw;
-    time(&raw);
 
-    char file[100], sehat[100];
-    strcpy(file, "/home/elang/Documents/makanan/makan_enak.txt");
+        pthread_join(tid[0],NULL);
+        pthread_join(tid[1],NULL);
+        pthread_join(tid2[0],NULL);
+        pthread_join(tid2[1],NULL);
+        pthread_join(tid3[0],NULL);
+        pthread_join(tid3[1],NULL);
 
-    stat(file, &baca);
+        printf("Menunggu 15 detik untuk mengekstrak kembali\n");
+        pthread_join(tid4[0],NULL);
+        pthread_join(tid4[1],NULL);
 
-    int last = (int)difftime(raw, baca.st_atime);
-
-    if (last <= 30)
-    {
-      sprintf(sehat, "/home/elang/Documents/makanan/makan_sehat%d.txt", angka);
-      FILE *fsehat;
-      fsehat = fopen(sehat, "w");
-      fclose(fsehat);
-      angka++;
-    }
-    sleep(5);
-  }
-
-  exit(EXIT_SUCCESS);
+        exit(0);
+        return 0;
 }
 ```
 - Lalu ketik di terminal 
