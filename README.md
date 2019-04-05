@@ -66,7 +66,15 @@ void* fungsi(void *arg)
         int i,j,sementara;
         for(c=1;c<=number[b];c++)
         {
-                factorial*=c;
+                if(number[b] == 0)
+                {
+                        factorial = 1;
+                }
+                else
+                {
+                        factorial*=c;
+                }
+
         }
         tampungan[d]=factorial;
         factorial=1;
