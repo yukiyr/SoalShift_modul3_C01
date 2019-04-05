@@ -972,6 +972,7 @@ int main(){
 
     return 0;
 }
+```
 
 - Lalu ketik di terminal 
 ```
