@@ -121,6 +121,8 @@ gcc -pthread -o soal1 soal1.c
 
 - Lalu jalankan ```./soal1```
 
+- Program C tersebut ketika sudah mendapatkan hasil faktorial maka akan disimpan di dalam array lalu baru diurutkan dari yang terkecil sampai ke yang terbesar. Lalu setelah diurutkan baru di print.
+
 **Kendala Yang Dialami**
 
 -
@@ -400,6 +402,7 @@ gcc -pthread -o soal3 soal3.c
 
 - Lalu jalankan ```./soal3```
 
+- Program C tersebut hanya berisi satu fungsi yang di dalamnya terdapat tiga kondisi if. Yang pertama jika user mengetikkan satu maka akan print wake up status dan spirit status sekarang. Yang kedua jika user menambahkan wake up status, maka wake up status akan bertambah 15 poin dan jika sudah dijalankan tiga kali maka fitur iraj tidak bisa dijalankan 10 detik. Yang ketiga jika user mengurangi spirit status, maka spirit status akan berkurang 20 poin dan jika sudah dijalankan tiga kali maka fitur agmal tidak bisa dijalankan 10 detik 
 
 **Kendala Yang Dialami**
 
@@ -573,6 +576,8 @@ gcc -pthread -o soal4 soal4.c
 ```
 
 - Lalu jalankan ```./soal4```
+
+- Program C ini memiliki 4 fungsi yang masing-masingnya berisi fungsi membuat file, fungsi zip file, fungsi rm file, dan fungsi unzip file dengan menggunakan system. Program C ini menggunakan mutual exclusion dimana fungsi 1 berjalan terlebih dahulu lalu fungsi 2, fungsi 3, dan fungsi 4. 
 
 **Kendala Yang Dialami**
 
