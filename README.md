@@ -772,7 +772,7 @@ int main(){
 gcc -pthread -o soal5 soal5.c
 ```
 
-- Lalu jalankan ```./soal5
+- Lalu jalankan ```./soal5```
 
 **Kendala Yang Dialami**-
 
