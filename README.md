@@ -34,11 +34,16 @@ Surabaya
 **Soal**
 
 1. Buatlah program C yang bisa menghitung faktorial secara parallel lalu menampilkan hasilnya secara berurutan
+
 Contoh:
-	./faktorial 5 3 4
-	3! = 6
-	4! = 24
-	5! = 120
+	
+./faktorial 5 3 4
+	
+3! = 6
+
+4! = 24
+
+5! = 120
 
 **Jawaban :**
 
@@ -293,7 +298,7 @@ Program akan berhenti jika Salah Satu :
 - Spirit_Status Iraj <= 0 (Tampilkan Pesan “Iraj ikut tidur, dan bangun kesiangan bersama Agmal”)
 
 
-Syarat Menggunakan Lebih dari 1 Thread
+c. Syarat Menggunakan Lebih dari 1 Thread
 
         
 **Jawaban :**
