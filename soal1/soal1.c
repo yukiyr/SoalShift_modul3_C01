@@ -4,7 +4,7 @@
 #include<stdlib.h>
 #include<unistd.h>
 
-int T;
+int k=0, input;
 int number[100],tampungan[100];
 int factorial=1,b=0,c,d=0;
 
@@ -19,11 +19,11 @@ void* fungsi(void *arg)
         factorial=1;
         b+=1;
         d+=1;
-        if(d==T)
+        if(d==k)
         {
-                for (i=0;i<T;i++)
+                for (i=0;i<k;i++)
                 {
-                        for (j=i+1;j<T;j++)
+                        for (j=i+1;j<k;j++)
                         {
                                 if(tampungan[i] > tampungan[j])
                                 {
@@ -33,7 +33,7 @@ void* fungsi(void *arg)
                                 }
                         }
                 }
-                for (i=0;i<T;i++)
+                for (i=0;i<k;i++)
                 {
                         printf("%d\n", tampungan[i]);
                 }
@@ -44,14 +44,15 @@ void* fungsi(void *arg)
 int main(void)
 {
         int i;
-        printf("Masukkan jumlah bilangan : ");
-        scanf("%d", &T);
         printf("Masukkan bilangan : ");
-        for (i=0;i<T;i++)
+        while((input= getchar()) != 10 && k<100) //10 is LineFeed which is sent when pressing enter
         {
-                scanf("%d", &number[i]);
+                if (input != 32) //spacing
+                {
+                        number[k++] = input - '0';
+                }
         }
-        for (i=0;i<T;i++)
+        for (i=0;i<k;i++)
         {
                 pthread_t tid[i];
                 pthread_create(&(tid[i]),NULL,fungsi,NULL);
