@@ -8,8 +8,8 @@
 
 int WakeUp_Status = 0;
 int Spirit_Status = 100;
-int status=0;
-int status2=0;
+int status=0; //jumlah wake up dijalankan berapa kali
+int status2=0; //jumlah spirit dijalankan berapa kali
 int input;
 
 void* fungsi(void *arg)
@@ -21,13 +21,13 @@ void* fungsi(void *arg)
         }
         else if (input==2)
         {
-                if(status2==3)
+                if(status2>=3)
                 {
                         printf("Agmal Ayo Bangun disabled 10 s\n");
                         sleep(10);
                         status2=0;
                 }
-                else if(status2!=3)
+                else if(status2<3)
                 {
                         WakeUp_Status+=15;
                         status++;
@@ -35,18 +35,19 @@ void* fungsi(void *arg)
         }
         else if (input==3)
         {
-                if(status==3)
+                if(status>=3)
                 {
                         printf("Fitur Iraj Ayo Tidur disabled 10 s\n");
                         sleep(10);
                         status=0;
                 }
-                else if(status!=3)
+                else if(status<3)
                 {
                         Spirit_Status-=20;
                         status2++;
                 }
         }
+
 
         return NULL;
 }
