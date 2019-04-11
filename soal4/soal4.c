@@ -70,7 +70,7 @@ void *thread3(void *arg)
                 snprintf(buf2, sizeof(buf2), "rm /home/test/Documents/FolderProses2/SimpanProses2.txt");
                 system(buf2);
         }
-        status=2;
+        status = 3 ;
         return NULL;
 }
 
