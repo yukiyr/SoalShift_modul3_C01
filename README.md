@@ -169,96 +169,278 @@ h. Menggunakan thread, socket, shared memory
 - Buatlah program C seperti ini
 
 ```
-#include <sys/types.h>
-#include <sys/stat.h>
+--Server Penjual--
+
 #include <stdio.h>
+#include <sys/socket.h>
 #include <stdlib.h>
-#include <fcntl.h>
-#include <errno.h>
-#include <unistd.h>
-#include <syslog.h>
+#include <netinet/in.h>
 #include <string.h>
-#include <pwd.h>
-#include <grp.h>
+#include <unistd.h>
+#include <sys/shm.h>
+#include <pthread.h>
+#include <termios.h>
 
-int main() {
-  pid_t pid, sid;
+#define PORT 2323
 
-  pid = fork();
+int *value; 
 
-  if (pid < 0) {
-    exit(EXIT_FAILURE);
-  }
+void* cetak(){
+    while(1){
+        printf("Stok barang : %d\n", *value);
+        sleep(5);
+    }
+}
 
-  if (pid > 0) {
-    exit(EXIT_SUCCESS);
-  }
+void* server(){
+    int server_fd, valread, new_socket;
+    struct sockaddr_in address;
+    int opt = 1;
+    int addrlen = sizeof(address);
+    char buffer[1024] = {0};
+      
+    if ((server_fd = socket(AF_INET, SOCK_STREAM, 0)) == 0) {
+        perror("socket failed");
+        exit(EXIT_FAILURE);
+    }
+      
+    if (setsockopt(server_fd, SOL_SOCKET, SO_REUSEADDR | SO_REUSEPORT, &opt, sizeof(opt))) {
+        perror("setsockopt");
+        exit(EXIT_FAILURE);
+    }
 
-  umask(0);
+    address.sin_family = AF_INET;
+    address.sin_addr.s_addr = INADDR_ANY;
+    address.sin_port = htons( PORT );
+      
+    if (bind(server_fd, (struct sockaddr *)&address, sizeof(address))<0) {
+        perror("bind failed");
+        exit(EXIT_FAILURE);
+    }
 
-  sid = setsid();
+    if (listen(server_fd, 3) < 0) {
+        perror("listen");
+        exit(EXIT_FAILURE);
+    }
 
-  if (sid < 0) {
-    exit(EXIT_FAILURE);
-  }
+    while((new_socket = accept(server_fd, (struct sockaddr *)&address, (socklen_t*)&addrlen)) > 0){
+        while((valread = read( new_socket , buffer, 1024)) > 0){
+            if(strcmp(buffer, "tambah") == 0){
+                *value += 1;
+            }
+            memset(buffer, 0, sizeof(buffer));
+        }
+    }
+}
 
-  if ((chdir("/")) < 0) {
-    exit(EXIT_FAILURE);
-  }
+int main(int argc, char const *argv[]) {
+    pthread_t thread, ctk;
+    key_t key = 1234;
 
-  close(STDIN_FILENO);
-  close(STDOUT_FILENO);
-  close(STDERR_FILENO);
+    int shmid = shmget(key, sizeof(int), IPC_CREAT | 0666);
+    value = shmat(shmid, NULL, 0);
 
-  while(1) {
-    int pid, pid1, pid2, pid3; 
+    pthread_create(&thread, NULL, server, NULL);
+    pthread_create(&ctk, NULL, cetak, NULL);
+    pthread_join(thread, NULL);
+    pthread_join(ctk, NULL);
+    
+
+    shmdt(value);
+    shmctl(shmid , IPC_RMID,NULL);
+    return 0;
+}
+
+--Server Pembeli--
+
+#include <stdio.h>
+#include <sys/socket.h>
+#include <stdlib.h>
+#include <netinet/in.h>
+#include <string.h>
+#include <unistd.h>
+#include <sys/shm.h>
+#include <pthread.h>
+#include <termios.h>
+
+#define PORT 2323
+
+int *value; 
+
+void* server(){
+    int server_fd, valread, new_socket;
+    struct sockaddr_in address;
+    int opt = 1;
+    int addrlen = sizeof(address);
+    char buffer[1024] = {0};
+      
+    if ((server_fd = socket(AF_INET, SOCK_STREAM, 0)) == 0) {
+        perror("socket failed");
+        exit(EXIT_FAILURE);
+    }
+      
+    if (setsockopt(server_fd, SOL_SOCKET, SO_REUSEADDR | SO_REUSEPORT, &opt, sizeof(opt))) {
+        perror("setsockopt");
+        exit(EXIT_FAILURE);
+    }
+
+    address.sin_family = AF_INET;
+    address.sin_addr.s_addr = INADDR_ANY;
+    address.sin_port = htons( PORT );
+      
+    if (bind(server_fd, (struct sockaddr *)&address, sizeof(address))<0) {
+        perror("bind failed");
+        exit(EXIT_FAILURE);
+    }
+
+    if (listen(server_fd, 3) < 0) {
+        perror("listen");
+        exit(EXIT_FAILURE);
+    }
+
+    while((new_socket = accept(server_fd, (struct sockaddr *)&address, (socklen_t*)&addrlen)) > 0){
+        while((valread = read( new_socket , buffer, 1024)) > 0){
+            if(strcmp(buffer, "beli") == 0){
+                if(*value > 0){
+                    char *tes = "transaksi berhasil\n";
+                    send(new_socket, tes, strlen(tes), 0);
+                    *value -= 1;
+                } else {
+                    char *tes = "transaksi gagal\n";
+                    send(new_socket, tes, strlen(tes), 0);
+                }
+                memset(buffer, 0, sizeof(buffer));
+            }
+        }
+    }
+}
+
+int main(int argc, char const *argv[]) {
+    pthread_t thread;
+    key_t key = 1234;
+
+    int shmid = shmget(key, sizeof(int), IPC_CREAT | 0666);
+    value = shmat(shmid, NULL, 0);
+
+    pthread_create(&thread, NULL, server, NULL);
+    pthread_join(thread, NULL);
+
+    shmdt(value);
+    shmctl(shmid , IPC_RMID,NULL);
+    return 0;
+}
+
+--Client Penjual--
+
+#include <stdio.h>
+#include <sys/socket.h>
+#include <stdlib.h>
+#include <netinet/in.h>
+#include <string.h>
+#include <unistd.h>
+#include <arpa/inet.h>
+#include <pthread.h>
+
+#define PORT 2323
   
-    pid = fork(); 
-  
-    if (pid == 0) { 
-  
-        char *argv [4] = {"chmod", "0777", "hatiku/elen.ku", NULL};
-        execv ("/bin/chmod", argv);
+void* client(){
+    struct sockaddr_in address;
+    int sock = 0, valread;
+    struct sockaddr_in serv_addr;
+    char *hello;
+    char buffer[1024] = {0};
 
-    } 
+    if ((sock = socket(AF_INET, SOCK_STREAM, 0)) < 0) {
+        printf("\n Socket creation error \n");
+    }
   
-    else { 
-        pid1 = fork(); 
-        if (pid1 == 0) { 
-            char *argv[3] = {"touch", "hatiku/elen.ku", NULL};
-            execv("/usr/bin/touch", argv);
-
-        } 
-        else { 
-            pid2 = fork(); 
-            if (pid2 == 0) { 
-                char *argv[4] = {"mkdir", "-p", "hatiku", NULL};
-                execv("/bin/mkdir", argv);
-
-            } 
+    memset(&serv_addr, '0', sizeof(serv_addr));
   
-            else { 
-                                char  alamat[] = "/home/test/hatiku/elen.ku";
-                                struct stat file;
-                                if (stat(alamat,&file) == 0) {
-                                struct group *grp;
-                                struct passwd *pwd;
-
-                                grp = getgrgid(file.st_uid);
-                                pwd = getpwuid(file.st_gid);
-
-                                if (strcmp(grp->gr_name, "www-data") != 0 && strcmp(pwd->pw_name, "www-data") != 0) {
-                                        char *argv[3] = {"rm", "/home/test/hatiku/elen.ku", NULL};
-                                        execv("/bin/rm", argv);
-                                }
-                                }
-            } 
-        } 
-    } 
-    sleep(3);
-  }
+    serv_addr.sin_family = AF_INET;
+    serv_addr.sin_port = htons(PORT);
+      
+    if(inet_pton(AF_INET, "127.0.0.1", &serv_addr.sin_addr)<=0) {
+        printf("\nInvalid address/ Address not supported \n");
+    }
   
-  exit(EXIT_SUCCESS);
+    if (connect(sock, (struct sockaddr *)&serv_addr, sizeof(serv_addr)) < 0) {
+        printf("\nConnection Failed \n");
+    }
+
+
+    while(1){
+        char arr[10];
+        scanf("%s", arr);
+        send(sock , arr, strlen(arr) , 0 );
+    }
+}
+
+int main(int argc, char const *argv[]) {
+    pthread_t thread;
+
+    pthread_create(&thread, NULL, client, NULL);
+    pthread_join(thread, NULL);
+
+    return 0;
+}
+
+--Client Pembeli--
+
+#include <stdio.h>
+#include <sys/socket.h>
+#include <stdlib.h>
+#include <netinet/in.h>
+#include <string.h>
+#include <unistd.h>
+#include <arpa/inet.h>
+#include <sys/shm.h>
+#include <pthread.h>
+
+#define PORT 2323
+
+int *value;
+
+void* client(){
+    struct sockaddr_in address;
+    int sock = 0, valread;
+    struct sockaddr_in serv_addr;
+    char *hello;
+    char buffer[1024] = {0};
+
+    if ((sock = socket(AF_INET, SOCK_STREAM, 0)) < 0) {
+        printf("\n Socket creation error \n");
+    }
+  
+    memset(&serv_addr, '0', sizeof(serv_addr));
+  
+    serv_addr.sin_family = AF_INET;
+    serv_addr.sin_port = htons(PORT);
+      
+    if(inet_pton(AF_INET, "127.0.0.1", &serv_addr.sin_addr)<=0) {
+        printf("\nInvalid address/ Address not supported \n");
+    }
+  
+    if (connect(sock, (struct sockaddr *)&serv_addr, sizeof(serv_addr)) < 0) {
+        printf("\nConnection Failed \n");
+    }
+
+    while(1){
+        char arr[10];
+        scanf("%s", arr);
+        send(sock , arr, strlen(arr) , 0 );
+        valread = read( sock , buffer, 1024);
+        printf("%s\n",buffer );
+        memset(buffer, 0, sizeof(buffer));
+    }
+}
+  
+int main(int argc, char const *argv[]) {
+    pthread_t thread;
+
+    pthread_create(&thread, NULL, client, NULL);
+    pthread_join(thread, NULL);
+
+    return 0;
 }
 ```
 - Lalu ketik di terminal 
@@ -513,7 +695,7 @@ void *thread3(void *arg)
                 snprintf(buf2, sizeof(buf2), "rm /home/test/Documents/FolderProses2/SimpanProses2.txt");
                 system(buf2);
         }
-        status=2;
+        status=3;
         return NULL;
 }
 
