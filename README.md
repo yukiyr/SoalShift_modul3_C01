@@ -137,6 +137,8 @@ gcc -pthread -o soal1 soal1.c
 
 **Screenshot**
 
+![Screenshot1](https://2.bp.blogspot.com/-h1eZ1yUranA/XLAZXJ9unXI/AAAAAAAAAoc/Q2RHexJ356cRQbc9YKYydC-x6gs0HvY-gCLcBGAs/s1600/1.png)
+
 2. Pada suatu hari ada orang yang ingin berjualan 1 jenis barang secara private, dia memintamu membuat program C dengan spesifikasi sebagai berikut:
 
 a. Terdapat 2 server: server penjual dan server pembeli
@@ -456,6 +458,8 @@ gcc -pthread -o soal2 soal2.c
 
 **Screenshot**
 
+![Screenshot2](https://1.bp.blogspot.com/-YGGRJtU18Zw/XLAZXNZOgVI/AAAAAAAAAok/-NIPnha-cNAjvq3JO8VMZSiyZIB2jyI3ACLcBGAs/s1600/2.png)
+
 3. Agmal dan Iraj merupakan 2 sahabat yang sedang kuliah dan hidup satu kostan, sayangnya mereka mempunyai gaya hidup yang berkebalikan, dimana Iraj merupakan laki-laki yang sangat sehat,rajin berolahraga dan bangun tidak pernah kesiangan sedangkan Agmal hampir menghabiskan setengah umur hidupnya hanya untuk tidur dan ‘ngoding’. Dikarenakan mereka sahabat yang baik, Agmal dan iraj sama-sama ingin membuat satu sama lain mengikuti gaya hidup mereka dengan cara membuat Iraj sering tidur seperti Agmal, atau membuat Agmal selalu bangun pagi seperti Iraj. Buatlah suatu program C untuk menggambarkan kehidupan mereka dengan spesifikasi sebagai berikut:
 
 a. Terdapat 2 karakter Agmal dan Iraj
@@ -599,6 +603,10 @@ gcc -pthread -o soal3 soal3.c
 -
 
 **Screenshot**
+
+![Screenshot3a](https://2.bp.blogspot.com/-ovaKKzwa08I/XLAZXLuWLXI/AAAAAAAAAog/EouiZc5qYNM4Y_DW6LAl0L_u20_9NKr7gCLcBGAs/s1600/3a.png)
+
+![Screenshot3b](https://2.bp.blogspot.com/-SAOPDPbdgRM/XLAZX-t5qkI/AAAAAAAAAoo/_SIr_44kbaQlL4qdCyfDX8UcE3R9yBoeACLcBGAs/s1600/3b.png)
 
 4.  Buatlah sebuah program C dimana dapat menyimpan list proses yang sedang berjalan (ps -aux) maksimal 10 list proses. Dimana awalnya list proses disimpan dalam di 2 file ekstensi .txt yaitu  SimpanProses1.txt di direktori /home/Document/FolderProses1 dan SimpanProses2.txt di direktori /home/Document/FolderProses2 , setelah itu masing2 file di  kompres zip dengan format nama file KompresProses1.zip dan KompresProses2.zip dan file SimpanProses1.txt dan SimpanProses2.txt akan otomatis terhapus, setelah itu program akan menunggu selama 15 detik lalu program akan mengekstrak kembali file KompresProses1.zip dan KompresProses2.zip 
 
@@ -774,6 +782,22 @@ gcc -pthread -o soal4 soal4.c
 -
 
 **Screenshot**
+
+![Screenshot4a](https://4.bp.blogspot.com/-vER75Phtouo/XLAZX9iDeBI/AAAAAAAAAos/0sZuiVQlH1IcjcuuBWpVJHbxXVT6PPzowCLcBGAs/s1600/4a.png)
+
+![Screenshot4b](https://2.bp.blogspot.com/-dYvZJwv5EII/XLAZYH7A3fI/AAAAAAAAAow/H1y2DLGvZlECdxUwoWPKBRc4jwi2IP86ACLcBGAs/s1600/4b.png)
+
+![Screenshot4c](https://2.bp.blogspot.com/-dDMX1qJ41LA/XLAZYprS8kI/AAAAAAAAAo4/gw4w_PNN2KYwaRFKBlxJ0xPDuJR7tfdyQCLcBGAs/s1600/4c.png)
+
+![Screenshot4d](https://4.bp.blogspot.com/-Ot-KMHsCWuo/XLAZYn1JWhI/AAAAAAAAAo0/q6xMgwgf1GofGI-RH587kwBo_dWP_9LcgCLcBGAs/s1600/4d.png)
+
+![Screenshot4e](https://2.bp.blogspot.com/-pq3UQrbDRJY/XLAZY-fVPyI/AAAAAAAAAo8/viMo9EN2gNM4ReSq5Y4hVfFrJKxd3rlxACLcBGAs/s1600/4e.png)
+
+![Screenshot4f](https://3.bp.blogspot.com/-JoCnsToOEIM/XLAZZMw6VWI/AAAAAAAAApA/MfTT9GeSLGMVr6l9Y5y1wnZr3qSyUlmBwCLcBGAs/s1600/4f.png)
+
+![Screenshot4g](https://2.bp.blogspot.com/-l2u4UmKTdO0/XLAZZWWgqJI/AAAAAAAAApE/kwsL13-gnMAiwvsiR-qs8bLlL8sHgGC-wCLcBGAs/s1600/4g.png)
+
+![Screenshot4h](https://2.bp.blogspot.com/-DFFsRnokdOM/XLAZZvxTJOI/AAAAAAAAApI/GX5dkvYkypMXZW4Q1v2eRrGUcZppuhmkACLcBGAs/s1600/4h.png)
 
 5. Angga, adik Jiwang akan berulang tahun yang ke sembilan pada tanggal 6 April besok. Karena lupa menabung, Jiwang tidak mempunyai uang sepeserpun untuk membelikan Angga kado. Kamu sebagai sahabat Jiwang ingin membantu Jiwang membahagiakan adiknya sehingga kamu menawarkan bantuan membuatkan permainan komputer sederhana menggunakan program C. Jiwang sangat menyukai idemu tersebut. Berikut permainan yang Jiwang minta. 
 
@@ -1169,3 +1193,8 @@ gcc -pthread -o soal5 soal5.c
 
 **Screenshot**
 
+![Screenshot5a](https://1.bp.blogspot.com/-1RTC3S_lJqA/XLAZZ6myADI/AAAAAAAAApM/vpcZkTQez6Uh0LkV_3h8LiXJlf9q6L7vwCLcBGAs/s1600/5a.png)
+
+![Screenshot5b](https://2.bp.blogspot.com/-E5_L7pUm_mU/XLAZaB8ts8I/AAAAAAAAApQ/bqzTrtDWvyoWc0N0mulMHq-NFVlMXmtnwCLcBGAs/s1600/5b.png)
+
+![Screenshot5c](https://4.bp.blogspot.com/-0f7660e_G0w/XLAZaTJ9tLI/AAAAAAAAApU/p55RB2hPW98NFQO3oNdJv2-L3wcxusEaACLcBGAs/s1600/5c.png)
